@@ -43,5 +43,4 @@ fin = open(sys.argv[1], 'r')
 for case_index in range(1, int(fgets(fin)) + 1):
   r = solve_case(fin)
   print "Case #%d: %s" % (case_index, r)
-  #print '====='
 fin.close()
