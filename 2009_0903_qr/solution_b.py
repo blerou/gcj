@@ -11,6 +11,18 @@ def fgets(f):
 
 def print_map(dmap, H, W):
   """
+  remap dmap
+  """
+  lpool = [chr(i+97) for i in range(26)]
+  remap = {}
+  for i in range(H):
+    for j in range(W):
+      r = dmap[i][j]
+      if r not in remap.keys():
+        remap[r] = lpool.pop(0)
+      dmap[i][j] = remap[r]
+  
+  """
   elnevezesi terkep kiiratasa
   """
   m = []
@@ -19,18 +31,18 @@ def print_map(dmap, H, W):
   
   return "\n".join(m)
 
-def lowest_neighbor(emap, pos):
+def lowest_neighbor(fmap, pos):
   """
-  eredeti terkep alapja (emap) meghatarozza, hova folyik innen a viz (pos)
+  eredeti terkep alapja (fmap) meghatarozza, hova folyik innen a viz (pos)
   return a cel regio vagy None sink eseten
   """
   order = [NORTH, WEST, EAST, SOUTH]
   lpos = None
-  alt = emap[pos[0]][pos[1]]
+  alt = fmap[pos[0]][pos[1]]
   for o in order:
     p = (o[0]+pos[0], o[1]+pos[1])
-    if p[0] in emap.keys() and p[1] in emap[p[0]].keys() and emap[p[0]][p[1]] < alt:
-      alt = emap[p[0]][p[1]]
+    if p[0] in fmap.keys() and p[1] in fmap[p[0]].keys() and fmap[p[0]][p[1]] < alt:
+      alt = fmap[p[0]][p[1]]
       lpos = p
   return lpos
 
@@ -51,7 +63,7 @@ def flow_from(tmap, dmap, pos, H, W):
           ret.append((i, j))
   return ret
 
-def solve_case(emap, H, W):
+def solve_case(fmap, H, W):
   """
   sinkek es folyasiranyok (tmap) meghatarozasa
   """
@@ -60,7 +72,7 @@ def solve_case(emap, H, W):
   for i in range(H):
     tmap[i] = {}
     for j in range(W):
-      tmap[i][j] = lowest_neighbor(emap, (i, j))
+      tmap[i][j] = lowest_neighbor(fmap, (i, j))
       if tmap[i][j] == None:
         sinks.append((i, j))
   
@@ -89,18 +101,18 @@ if __name__ == '__main__':
   
   for case_index in range(int(fgets(fin))):
     H, W = map(int, re.findall('\d+', fgets(fin)))
-    emap = []
+    fmap = []
     for i in range(H):
       tmp = []
       m = map(int, re.findall('\d+', fgets(fin)))
       for j in range(W):
         tmp.append((j, m[j]))
-      emap.append((i, dict(tmp)))
+      fmap.append((i, dict(tmp)))
     
-    dmap = solve_case(dict(emap), H, W)
+    dmap = solve_case(dict(fmap), H, W)
     r = "Case #%d:\n%s" % (case_index + 1, dmap)
     print r
-    #fout.write(r + "\n")
+    fout.write(r + "\n")
     
   fin.close()
   fout.close()
