@@ -4,24 +4,32 @@ import re
 def fgets(f):
   return f.readline().rstrip("\n")
 
-def cmp_pair(a, b):
-  return cmp(len(a), len(b))
-
-def cmp_flavor(a, b):
-  return cmp(a[1], b[1])
-
 def build_pairs(f, M):
   pairs = []
   for _ in range(M):
     cnt = map(int, re.findall('\d+', fgets(f)))
     p, cnt = cnt[1:], cnt[0]
-    r = [(p[i*2], p[i*2+1]) for i in range(cnt)]
-    r.sort(cmp_flavor)
-    pairs.append(r) 
-  pairs.sort(cmp_pair)
+    pairs.append([(p[i*2], p[i*2+1]) for i in range(cnt)]) 
   return pairs
 
 def build_mix(N, M, pairs):
+  base_mix = [dict([(n+1, None) for n in range(N)])]
+  for customer in pairs:
+    for flav, malt in customer:
+      new_mix = []
+      for m in base_mix:
+        if m[flav] == malt:
+          new_mix.append(m)
+        if m[flav] == None:
+          m[flav] = malt
+          new_mix.append(m)
+      print base_mix
+      print new_mix
+      base_mix = new_mix
+  
+  print base_mix
+  return
+  
   mix = dict([(m, dict([(n+1, [True, True]) for n in range(N)])) for m in range(M)])
   cust_cnt = 0
   for customer in pairs:
@@ -59,30 +67,12 @@ def build_mix(N, M, pairs):
   
   return mix
 
-def build_choice(N, M, pairs, mix):
-  """choose a shake person by person which match others preferences"""
-  m = 0
-  for customer in pairs:
-    r = []
-    for flav, malt in customer:
-      r = [flav, malt]
-      for n in range(1, N+1):
-        r[1] = r[1] and mix[m][flav][malt]
-        if not r[1]:
-          break
-      if not r[1]:
-        break
-    
-    m += 1
-
 def solve_case(fin):
   N, M = int(fgets(fin)), int(fgets(fin))
   
   pairs = build_pairs(fin, M)
   
   mix = build_mix(N, M, pairs)
-  
-  return build_choice(N, M, mix)
   
 if __name__ == '__main__':
   fin = open(sys.argv[1], 'r')

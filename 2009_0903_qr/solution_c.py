@@ -15,7 +15,10 @@ def solve(subject, pos, count):
   
   p = subject.find(char, 0)
   while -1 != p:
-    count = solve(subject[p+1:], pos+1, count)
+    r = solve(subject[p+1:], pos+1, count)
+    if r == count:
+      return count
+    count = r
     p = subject.find(char, p+1)
   
   return count
