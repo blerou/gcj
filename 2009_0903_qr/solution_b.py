@@ -11,11 +11,23 @@ def fgets(f):
 
 def print_map(dmap, H, W):
   """
+  remap dmap
+  """
+  lpool = [chr(i+97) for i in range(26)]
+  remap = {}
+  for i in range(H):
+    for j in range(W):
+      r = dmap[i][j]
+      if r not in remap.keys():
+        remap[r] = lpool.pop(0)
+      dmap[i][j] = remap[r]
+  
+  """
   elnevezesi terkep kiiratasa
   """
   m = []
   for i in range(H):
-    m.append(" ".join([v for k, v in dmap[i].iteritems()]))
+    m.append(" ".join(dmap[i].values()))
   
   return "\n".join(m)
 
@@ -34,9 +46,9 @@ def lowest_neighbor(emap, pos):
       lpos = p
   return lpos
 
-def flow_from(tmap, dmap, pos, H, W):
+def flow_from(fmap, dmap, pos, H, W):
   """
-  folyasirany terkep (tmap) alapjan
+  folyasirany terkep (fmap) alapjan
   azon helyek meghatarozasa (ret)
   ahonnan ide (pos) folyik a viz
   
@@ -44,30 +56,32 @@ def flow_from(tmap, dmap, pos, H, W):
   az elnevezesi terkepen (dmap)
   """
   ret = []
-  for i in range(H):
-    for j in range(W):
-      if tmap[i][j] == pos:
-        if j not in dmap[i].keys():
-          ret.append((i, j))
+  for i in range(-1, 2):
+    for j in range(-1, 2):
+      x, y = pos[0] + i, pos[1] + j
+      if x in fmap.keys() and y in fmap[x].keys():
+        if fmap[x][y] == pos:
+          if y not in dmap[x].keys():
+            ret.append((x, y))
   return ret
 
 def solve_case(emap, H, W):
   """
-  sinkek es folyasiranyok (tmap) meghatarozasa
+  sinkek es folyasiranyok (fmap) meghatarozasa
   """
   sinks = []
-  tmap = {}
+  fmap = {}
   for i in range(H):
-    tmap[i] = {}
+    fmap[i] = {}
     for j in range(W):
-      tmap[i][j] = lowest_neighbor(emap, (i, j))
-      if tmap[i][j] == None:
+      fmap[i][j] = lowest_neighbor(emap, (i, j))
+      if fmap[i][j] == None:
         sinks.append((i, j))
   
   """
   sinkekbol kiindulva 
   elnevezesi terkep (dmap) meghatarozasa 
-  folyasiranyok (tmap) alapjan
+  folyasiranyok (fmap) alapjan
   """
   dmap = [{} for i in range(H)]
   spool = [chr(i+97) for i in range(26)]
@@ -77,7 +91,7 @@ def solve_case(emap, H, W):
     dmap[sink[0]][sink[1]] = sid
     while len(q):
       pos = q.pop(0)
-      for f in flow_from(tmap, dmap, pos, H, W):
+      for f in flow_from(fmap, dmap, pos, H, W):
         dmap[f[0]][f[1]] = sid
         q.append(f)
   
@@ -100,7 +114,7 @@ if __name__ == '__main__':
     dmap = solve_case(dict(emap), H, W)
     r = "Case #%d:\n%s" % (case_index + 1, dmap)
     print r
-    #fout.write(r + "\n")
+    fout.write(r + "\n")
     
   fin.close()
   fout.close()
