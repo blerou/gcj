@@ -11,7 +11,6 @@ $case = 0;
 while (!feof($fin)) {
 	$case++; $in = fgets($fin);
 	if ($case > $cases) break;
-//	if ($case != 4) continue; var_dump($in);
 	list($combs, $opps, $inv) = parse($in);
 	$out = solve($combs, $opps, $inv);
 	$res = sprintf("Case #%d: %s\n", $case, format($out));
@@ -38,7 +37,6 @@ function parse($in) {
 
 function solve($comb, $opp, $inv) {
 	$out = array();
-	$clear = $opp;
 	foreach ($inv as $m) {
 		array_unshift($out, $m);
 		$out = apply_comb($out, $comb);

@@ -1,19 +1,15 @@
 <?php
 
-$inputFile = $_SERVER['argv'][1];
-$outputFile = $inputFile.'.out';
-
-$fin = fopen($inputFile, 'r');
-$fout = fopen($outputFile, 'w+');
+$fin = fopen($_SERVER['argv'][1], 'r');
+$fout = fopen($$_SERVER['argv'][1].'.out', 'w+');
 
 $cases = fgets($fin);
 $case = 0;
 while (!feof($fin)) {
-	$case++; if ($case > $cases) break;
-//	$case++; if ($case != 2) {fgets($fin);continue;}
-	$input = fgets($fin);
-	$input = preg_replace('~^\d+ ~', '', $input);
-	$out = solve(parse($input));
+	$case++; $in = fgets($fin);
+	if ($case > $cases) break;
+	$in = preg_replace('~^\d+ ~', '', $in);
+	$out = solve(parse($in));
 	$res = sprintf("Case #%d: %d\n", $case, $out);
 	fputs($fout, $res);
 	echo "$res";
@@ -49,11 +45,8 @@ function solve($in) {
 				$currT = $t - $currT;
 			}
 		}
-//		var_dump($i, $r, $t, $currR, $currT, $sum);
 	}
 	$sum += $currT;
 	
-//	var_dump($sum);
-
 	return $sum;
 }
