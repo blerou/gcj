@@ -3,10 +3,29 @@
 
 --parse testCase = []
 
-solve' invokes combs opps = let c = prepComb combs
-                                o = prepOpp opps
-                            in apply' invokes c o []
+solve' invokes combs opps = let cs = prepCombs combs
+                                os = prepOpps opps
+                                killaz = []
+                            in apply' cs os killaz invokes
 
+prepCombs :: [Char] -> [(Char, Char, Char)]
+prepCombs [] = []
+prepCombs (x:y:r:combs) = (x,y,r):(y,x,r):prepCombs combs
+
+prepOpps :: [Char] -> [(Char, Char)]
+prepOpps [] = []
+prepOpps (x:y:opps) = (x,y):(y,x):prepOpps opps
+
+apply' :: [(Char, Char, Char)] -> [(Char, Char)] -> [Char] -> [Char] -> [Char]
+apply' cs os killaz invokes = foldl combine $ head invokes $ tail invokes
+
+combine :: [Char] -> [Char] -> [Char]
+combine acc i = 
+
+
+
+
+{--
 prepComb :: [Char] -> [Char]
 prepComb [] = []
 prepComb (x:y:r:comb) = x:y:r:y:x:r:prepComb comb
@@ -29,3 +48,4 @@ comb (c1:c2:r:combs) i1 i2
   | otherwise = comb combs i1 i2
 
 --opp :: [Char] -> 
+--}
