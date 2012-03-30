@@ -1,5 +1,3 @@
-import Data.Char
-
 main = do
   cases <- getContents
   putStrLn $ unlines . solve $ tail $ lines cases
@@ -16,15 +14,13 @@ parse line =
       partsAfterCombos = drop numOfCombos (tail parts)
       numOfOpps = read $ head partsAfterCombos
       opps = concat $ take numOfOpps (tail partsAfterCombos)
-      invokes = head $ drop (2 + numOfOpps) partsAfterCombos
+      invokes = last parts
   in [invokes, opps, combos]
+    where prepareCombos [] = []
+          prepareCombos (c1:c2:r:xs) = c1:c2:r:c2:c1:r:prepareCombos xs
 
 magicka :: [String] -> String
 magicka (invokes:opps:combos:_) = reverse $ foldl (foldInvokes combos opps) [] invokes
-
-prepareCombos :: String -> String
-prepareCombos [] = []
-prepareCombos (c1:c2:r:xs) = c1:c2:r:c2:c1:r:prepareCombos xs
 
 foldInvokes :: String -> String -> String -> Char -> String
 foldInvokes combos opps is i1 = applyOpp opps resolvedCombos
