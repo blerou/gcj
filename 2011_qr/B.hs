@@ -1,10 +1,10 @@
 main = do
   cases <- getContents
-  putStrLn $ unlines . solve $ tail $ lines cases
+  putStr $ unlines . solve . (drop 1) . lines $ cases
 
 solve cases = 
-  let results = map (format . magicka . parse) cases
-  in zipWith (\i result -> "Case #" ++ show i ++ ": " ++ result) [1..] results
+  let results = map (magicka . parse) cases
+  in zipWith (\i result -> "Case #" ++ show i ++ ": " ++ format result) [1..] results
 
 parse :: String -> [String]
 parse line = 
