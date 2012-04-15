@@ -17,15 +17,13 @@ dancingGooglers (s:p:ts) = sureCount + (if surprisingCount > s then s else surpr
     sureCount = length $ filter sureFunc tPairs
     sureFunc (d, r)
       | d >= p              = True
-      | d == p - 1 && r > 0 = True
+      | d + 1 == p && r > 0 = True
       | otherwise           = False
     surprisingCount = length $ filter surprisingFunc tPairs
     surprisingFunc (d, r)
-      | d == 0               = False
-      | p == 0               = False
-      | d == p - 1 && r == 0 = True
-      | d == p - 2 && r == 2 = True
-      | otherwise            = False
+      | d > 0 && d + 1 == p && r == 0 = True
+      | d + 2 == p && r == 2          = True
+      | otherwise                     = False
 
-
+format :: Int -> String
 format = show
