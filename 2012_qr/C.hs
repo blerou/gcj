@@ -1,33 +1,27 @@
 import Data.List
 
-type Pair = (Int, Int)
-
 main = do
   cases <- getContents
---  putStrLn $ show $ filter (\i -> length i > 1) $ group result
---  where result = sort $ recycledNumbers [1111, 2222]
   putStr $ unlines . solve . tail . lines $ cases
 
 solve :: [String] -> [String]
 solve lines = 
-  let results = map (length . nub . recycledNumbers . parse) lines
+  let results = map (length . recycledNumbers . parse) lines
   in zipWith (\i r -> "Case #" ++ show i ++ ": " ++ format r) [1..] results
 
-parse :: String -> [Int]
-parse = map read . words
+parse :: String -> [String]
+parse = words
 
-recycledNumbers :: [Int] -> [Pair]
-recycledNumbers [a, b] = foldl (countANumber b) [] [start..b]
-  where start = if a < 10 then 10 else a
+recycledNumbers :: [String] -> [String]
+recycledNumbers [a, b] = foldl (countANumber b) [] [(read a::Int)..(read b::Int)]
 
-countANumber :: Int -> [Pair] -> Int -> [Pair]
-countANumber top acc n = foldl (countRotations top n) acc rotations
-  where len = length $ show n
-        rotations = zipWith (\i n -> 10^(len-i) * (rem n (10^i)) + div n (10^i)) [1..len] $ repeat n
+countANumber :: String -> [String] -> Int -> [String]
+countANumber top acc base = foldl (countRotations top num) acc rotations
+  where num = show base
+        rotations = nub . init . tail $ zipWith (++) (tails num) (inits num)
 
-countRotations :: Int -> Int -> [Pair] -> Int -> [Pair]
-countRotations top base acc n = if n > base && n <= top then (base,n):acc else acc
-
+countRotations :: String -> String -> [String] -> String -> [String]
+countRotations top base acc n = if n > base && n <= top then n:acc else acc
 
 format :: Int -> String
 format = show
