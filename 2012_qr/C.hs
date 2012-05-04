@@ -6,22 +6,20 @@ main = do
 
 solve :: [String] -> [String]
 solve lines = 
-  let results = map (length . recycledNumbers . parse) lines
+  let results = map (recycledNumbers . parse) lines
   in zipWith (\i r -> "Case #" ++ show i ++ ": " ++ format r) [1..] results
 
 parse :: String -> [String]
 parse = words
 
-recycledNumbers :: [String] -> [String]
-recycledNumbers [a, b] = foldl (countANumber b) [] [(read a::Int)..(read b::Int)]
+recycledNumbers :: [String] -> Int
+recycledNumbers [a, b] = foldl (countANumber b) 0 [(read a::Int)..(read b::Int)]
 
-countANumber :: String -> [String] -> Int -> [String]
-countANumber top acc base = foldl (countRotations top num) acc rotations
+countANumber :: String -> Int -> Int -> Int
+countANumber top sum base = sum + recycleds
   where num = show base
         rotations = nub . init . tail $ zipWith (++) (tails num) (inits num)
-
-countRotations :: String -> String -> [String] -> String -> [String]
-countRotations top base acc n = if n > base && n <= top then n:acc else acc
+        recycleds = length $ filter (\n -> n > num && n <= top) rotations
 
 format :: Int -> String
 format = show
