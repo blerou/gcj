@@ -3,18 +3,16 @@ import qualified Data.Map as M
 
 type GoogMap = (Char, Char)
 
-main = do
-  cases <- getContents
-  putStr $ unlines . solve sample . tail . lines $ cases
+main = interact $ unlines . solve . tail . lines
+
+solve :: [String] -> [String]
+solve cases = 
+  let results = solveCase (buildDict sample) cases
+  in zipWith (\i r -> "Case #" ++ show i ++ ": " ++ format r) [1..] results
   where sample = [
           ("ejp mysljylc kd kxveddknmc re jsicpdrysi", "our language is impossible to understand"),
           ("rbcpc ypc rtcsra dkh wyfrepkym veddknkmkrkcd", "there are twenty six factorial possibilities"),
           ("de kr kd eoya kw aej tysr re ujdr lkgc jv", "so it is okay if you want to just give up")]
-
-solve :: [(String, String)] -> [String] -> [String]
-solve sample cases = 
-  let results = solveCase (buildDict sample) cases
-  in zipWith (\i r -> "Case #" ++ show i ++ ": " ++ format r) [1..] results
 
 buildDict :: [(String, String)] -> [GoogMap]
 buildDict [] = []
