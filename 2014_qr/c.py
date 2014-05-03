@@ -14,12 +14,6 @@ def mine_block(s, dim):
     r, c = dim
     return [(x+i, y+j) for i in range(r) for j in range(c)]
 
-def extract_mines(mine_blocks):
-    mines = []
-    for s, dim in mine_blocks:
-        mines.extend(mine_block(s, dim))
-    return mines
-
 def neighbours(cell):
     x, y = cell
     return [(x + i, y + j) for i in [-1, 0, 1] for j in [-1, 0, 1] if i != 0 or j != 0]
@@ -40,18 +34,16 @@ def extract_cells(r, c, mines):
             free.append(cell)
     return digits, free
 
-def free_neighbours(free):
-    result = []
-    free = set(free)
-    for cell in free:
-        for n in neighbours(cell):
-            if n not in free:
-                result.append(n)
-    return result
-
 def digits_with_no_free_neighbours(digits, free):
     with_neighbours = [cell for cell in digits if len(set(neighbours(cell)) & set(free)) > 0]
     return set(digits) - set(with_neighbours)
+
+def solvable(r, c, mines):
+    digits, free = extract_cells(r, c, mines)
+    all_digits_is_one = len(free) == 0 and len(digits) == 1
+    if all_digits_is_one:
+        return True
+    return len(digits_with_no_free_neighbours(digits, free)) == 0
 
 def solve(c):
     r,c,m = c
@@ -86,8 +78,6 @@ def solve(c):
             mines.extend(best_fill_places)
 
 
-    digits, free = extract_cells(dim_r, dim_c, mines)
-    non_free_neighbour_digit = digits_with_no_free_neighbours(digits, free)
 
     # print "mines", mines
     # print "digits", digits
@@ -95,9 +85,7 @@ def solve(c):
     # print non_free_neighbour_digit
     # print "================\n%s\n================" % render(mines, dim_r, dim_c)
 
-    if len(free) == 0 and len(digits) == 1:
-        return render(mines, dim_r, dim_c)
-    if len(non_free_neighbour_digit) == 0:
+    if solvable(dim_r, dim_c, mines):
         return render(mines, dim_r, dim_c)
     else:
         # print "================\n%s\n================" % render(mines, dim_r, dim_c)
