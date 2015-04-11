@@ -2,3 +2,5 @@
 .swp
 *.hi
 *.o
+.idea
+__pycache__
