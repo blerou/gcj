@@ -9,9 +9,7 @@ def read_input(s):
         d = data.pop(0)
         ps = dict()
         for p in data[:d]:
-            if p not in ps:
-                ps[p] = 0
-            ps[p] += 1
+            ps[p] = ps.get(p, 0) + 1
         data = data[d:]
         result.append(ps)
     return result
@@ -27,7 +25,7 @@ def solve(ps):
         pcnt = ps[pmax]
         small_half = pmax / 2
         large_half = pmax - small_half
-        if pcnt <= small_half:
+        if pmax > 3 and mins < sm:
             if small_half not in ps:
                 ps[small_half] = 0
             if large_half not in ps:

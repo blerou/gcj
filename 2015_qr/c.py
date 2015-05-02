@@ -37,6 +37,10 @@ def mul(a, b):
     return r, s1 ^ s2 ^ s3
 
 
+def unit():
+    return "1", True
+
+
 def calc(exp, pos, val, term, act_term, term_cnt, tries):
     while val != (exp, True) and pos < len(term):
         val = mul(val, term[pos])
@@ -55,7 +59,7 @@ def calc(exp, pos, val, term, act_term, term_cnt, tries):
 
 
 def calc_term(term):
-    val = ("1", True)
+    val = unit()
     for c in term:
         val = mul(val, c)
     return val
@@ -66,13 +70,12 @@ def solve(c):
         term, term_cnt = c
         act_term = 1
         term_val = calc_term(term)
-        unit = ("1", True)
         tries = 32 / len(term) + 1 if len(term) < 32 else 1
 
-        pos, act_term = calc("i", 0, unit, term, act_term, term_cnt, tries)
-        pos, act_term = calc("j", pos, unit, term, act_term, term_cnt, tries)
+        pos, act_term = calc("i", 0, unit(), term, act_term, term_cnt, tries)
+        pos, act_term = calc("j", pos, unit(), term, act_term, term_cnt, tries)
 
-        kval = unit
+        kval = unit()
         while pos < len(term):
             kval = mul(kval, term[pos])
             pos += 1
