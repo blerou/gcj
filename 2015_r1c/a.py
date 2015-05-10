@@ -11,9 +11,9 @@ def read_input():
 def solve(data):
     r, c, w = data
     if c == w:
-        return w
+        return r - 1 + w
     else:
-        result = c / w + w - 1
+        result = r * (c / w) + w - 1
         if c % w != 0:
             result += 1
         return result
