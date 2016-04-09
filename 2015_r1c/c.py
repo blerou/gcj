@@ -16,22 +16,22 @@ def solve(data):
     c, D, v = data
     Ds = set(D)
     ds = {1}
-    max_ds = 1
-    max_coin = sum(ds) * c
+    max_d = 1
+    max_coin = max_d * c
     while True:
         while True:
-            from_d = set([d for d in Ds if max_ds < d <= max_coin])
+            from_d = set([d for d in Ds if max_d < d <= max_coin])
             if len(from_d) == 0:
                 break
             ds.update(from_d)
             Ds.difference_update(from_d)
-            max_ds = max(from_d)
+            max_d = max(from_d)
             max_coin += sum(from_d) * c
         if v <= max_coin:
             break
         ds.add(max_coin+1)
-        max_ds = max_coin + 1
-        max_coin += max_ds * c
+        max_d = max_coin + 1
+        max_coin += max_d * c
     return len(ds.difference(D))
 
 if __name__ == "__main__":
