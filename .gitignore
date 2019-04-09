@@ -4,3 +4,4 @@
 *.o
 .idea
 __pycache__
+*/*.jar

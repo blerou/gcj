@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ ! -f clojure-1.8.0.jar ]
+then
+  wget http://central.maven.org/maven2/org/clojure/clojure/1.8.0/clojure-1.8.0.jar
+fi
+
+java -client -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xverify:none -cp clojure-1.8.0.jar clojure.main $1
