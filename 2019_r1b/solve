@@ -1,0 +1,4 @@
+#!/bin/bash
+SOLVER="$1"
+INFILE="$2"
+cat $INFILE | python3 $SOLVER | tee "$INFILE.out" | less
