@@ -1,0 +1,4 @@
+#!/bin/bash
+SOLVER="$1"
+INFILE="$2"
+cat $INFILE | java $SOLVER | tee "$INFILE.out" | less
